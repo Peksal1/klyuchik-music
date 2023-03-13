@@ -3,6 +3,8 @@ import asyncio
 from pytube import YouTube
 import random
 import os
+import discord.opus
+discord.opus.load_opus('libopus.so.0')
 
 bot_token = os.environ['DISCORD_BOT_TOKEN']
 
