@@ -16,7 +16,7 @@ video_urls = [
     'https://www.youtube.com/watch?v=3GwjfUFyY6M',
 ]
 
-async def play_song():
+async def play_song(voice_client):
     # Choose a random video URL from the list
     url = random.choice(video_urls)
 
@@ -26,8 +26,6 @@ async def play_song():
     filename = stream.download()
 
     # Send the audio to the voice channel
-    voice_channel = client.get_channel('712008433443799151')
-    voice_client = await voice_channel.connect()
     voice_client.play(discord.FFmpegPCMAudio(filename))
 
 @client.event
@@ -45,5 +43,4 @@ async def on_ready():
         await play_song(voice_client)
         await asyncio.sleep(5) # wait 5 seconds before playing the next song    
 
-# Replace VOICE_CHANNEL_ID with the ID of the voice channel you want the bot to join
-client.run('bot_token')
+client.run(bot_token)
