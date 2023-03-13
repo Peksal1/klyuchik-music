@@ -21,9 +21,10 @@ client = discord.Client(intents=intents)
 
 # List of YouTube video URLs to play
 video_urls = [
-    'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    'https://www.youtube.com/watch?v=2ZIpFytCSVc',
-    'https://www.youtube.com/watch?v=3GwjfUFyY6M',
+    'https://www.youtube.com/watch?v=jumQ76GEYLQ',
+    'https://www.youtube.com/watch?v=Cz5q05Hl5gs',
+    'https://www.youtube.com/watch?v=Uift1RYej0w',
+    'https://www.youtube.com/watch?v=qT_R_D3tCes',
 ]
 
 async def play_song(voice_client):
