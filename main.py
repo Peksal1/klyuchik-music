@@ -74,9 +74,14 @@ async def on_ready():
     # Start playing songs in a loop
     while True:
         try:
-            if voice_client is not None:
+            if voice_client and voice_client.is_connected():
                 await play_song(voice_client)
-            await asyncio.sleep(5) # wait 5 seconds before playing the next song
+            else:
+                print('Bot is not connected to a voice channel')
+                voice_client = None
+                await asyncio.sleep(5) # wait 5 seconds before trying to reconnect
+                voice_client = await voice_channel.connect()
+                print(f'Connected to voice channel {voice_channel.name}')
         except Exception as e:
             print(f'Error: {e}')
 
