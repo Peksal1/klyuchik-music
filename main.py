@@ -36,13 +36,16 @@ async def on_ready():
 
     # Find the voice channel with the specified ID
     voice_channel = client.get_channel(712008433443799151)
-    
+    print(f'Connecting to voice channel {voice_channel.name} ({voice_channel.id})')
+
     # Connect to the voice channel
     voice_client = await voice_channel.connect()
+    print('Connected to voice channel')
 
     # Start playing songs
     while True:
         await play_song(voice_client)
-        await asyncio.sleep(5) # wait 5 seconds before playing the next song    
+        print('Playing a song')
+        await asyncio.sleep(5) # wait 5 seconds before playing the next song   
 
 client.run(bot_token)
