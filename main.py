@@ -26,7 +26,7 @@ async def play_song():
     filename = stream.download()
 
     # Send the audio to the voice channel
-    voice_channel = client.get_channel(VOICE_CHANNEL_ID)
+    voice_channel = client.get_channel('712008433443799151')
     voice_client = await voice_channel.connect()
     voice_client.play(discord.FFmpegPCMAudio(filename))
 
@@ -34,10 +34,16 @@ async def play_song():
 async def on_ready():
     print(f'{client.user} has connected to Discord!')
 
+    # Find the voice channel with the specified ID
+    voice_channel = client.get_channel('712008433443799151')
+    
+    # Connect to the voice channel
+    voice_client = await voice_channel.connect()
+
     # Start playing songs
     while True:
-        await play_song()
-        await asyncio.sleep(5) # wait 5 seconds before playing the next song
+        await play_song(voice_client)
+        await asyncio.sleep(5) # wait 5 seconds before playing the next song    
 
 # Replace VOICE_CHANNEL_ID with the ID of the voice channel you want the bot to join
 client.run('bot_token')
