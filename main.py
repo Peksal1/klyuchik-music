@@ -21,10 +21,14 @@ client = discord.Client(intents=intents)
 
 # List of YouTube video URLs to play
 video_urls = [
-    'https://www.youtube.com/watch?v=jumQ76GEYLQ',
-    'https://www.youtube.com/watch?v=Cz5q05Hl5gs',
-    'https://www.youtube.com/watch?v=Uift1RYej0w',
-    'https://www.youtube.com/watch?v=qT_R_D3tCes',
+    'https://www.youtube.com/watch?v=jumQ76GEYLQ', #
+    'https://www.youtube.com/watch?v=Cz5q05Hl5gs', #
+    'https://www.youtube.com/watch?v=Uift1RYej0w', #
+    'https://www.youtube.com/watch?v=qT_R_D3tCes', #
+    'https://www.youtube.com/watch?v=6IUqSY783_8', # собака писала
+    'https://www.youtube.com/watch?v=vkPXG11Fj_U', # шипупи
+    'https://www.youtube.com/watch?v=G6pqAN8ALC8', # пасха
+    'https://www.youtube.com/watch?v=azd1ZnHNt9g', # радужный гимн
 ]
 
 async def play_song(voice_client):
@@ -70,7 +74,8 @@ async def on_ready():
     # Start playing songs in a loop
     while True:
         try:
-            await play_song(voice_client)
+            if voice_client is not None:
+                await play_song(voice_client)
             await asyncio.sleep(5) # wait 5 seconds before playing the next song
         except Exception as e:
             print(f'Error: {e}')
