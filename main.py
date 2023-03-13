@@ -33,7 +33,7 @@ async def on_ready():
     print(f'{client.user} has connected to Discord!')
 
     # Find the voice channel with the specified ID
-    voice_channel = client.get_channel('712008433443799151')
+    voice_channel = client.get_channel(712008433443799151)
     
     # Connect to the voice channel
     voice_client = await voice_channel.connect()
