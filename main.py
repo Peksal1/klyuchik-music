@@ -9,7 +9,10 @@ discord.opus.load_opus('libopus.so.0')
 bot_token = os.environ['DISCORD_BOT_TOKEN']
 print('hello')
 # Replace YOUR_TOKEN_HERE with your bot's token
-client = discord.Client()
+intents = discord.Intents.default()
+intents.members = True
+
+client = discord.Client(intents=intents)
 
 # List of YouTube video URLs
 video_urls = [
