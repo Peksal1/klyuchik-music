@@ -1,4 +1,5 @@
 import asyncio
+import discord
 from pytube import YouTube
 from discord.ext import commands
 import random
@@ -18,6 +19,7 @@ if not bot_token:
 intents = discord.Intents.default()
 intents.members = True
 client = discord.Client(intents=intents)
+bot = commands.Bot(command_prefix='!')  # Replace '!' with your desired command prefix
 
 # List of YouTube video URLs to play
 video_urls = [
@@ -131,9 +133,5 @@ async def on_message(message):
             ]
             reply = random.choice(phrases)
             await message.channel.send(reply)
-
-
-    # Handle any other commands or messages as usual
-    await client.process_commands(message)
 
 client.run(bot_token)
