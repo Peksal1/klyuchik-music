@@ -1,6 +1,7 @@
 import discord
 import asyncio
 from pytube import YouTube
+from discord.ext import commands
 import random
 import os
 import discord.opus
@@ -55,6 +56,8 @@ async def play_song(voice_client):
     while voice_client.is_playing():
         await asyncio.sleep(1)
     os.remove(filename)
+
+bot = commands.Bot(command_prefix='!')
 
 @client.event
 async def on_ready():

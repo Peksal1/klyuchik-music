@@ -1,5 +1,6 @@
 discord
 pytube
 ffmpeg
+discord.py
 pycryptodome==3.10.1
 PyNaCl==1.4.0
