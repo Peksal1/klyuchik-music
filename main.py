@@ -91,24 +91,25 @@ async def send_hello():
         print(f'Connected to voice channel {voice_channel.name}')
 
     # Start sending "hello" messages in a loop
-    while True:
-        try:
-            await send_hello()
-        except Exception as e:
-            print(f'Error: {e}')
+while True:
+    try:
+        await send_hello()
+    except Exception as e:
+        print(f'Error: {e}')
 
-        # Start playing songs in a loop
-        while True:
-            try:
-                if voice_client and voice_client.is_connected():
-                    await play_song(voice_client)
-                else:
-                    print('Bot is not connected to a voice channel')
-                    voice_client = None
-                    await asyncio.sleep(5) # wait 5 seconds before trying to reconnect
-                    voice_client = await voice_channel.connect()
-                    print(f'Connected to voice channel {voice_channel.name}')
-            except Exception as e:
-                print(f'Error: {e}')
 
-    client.run(bot_token)
+    # Start playing songs in a loop
+while True:
+    try:
+         if voice_client and voice_client.is_connected():
+            await play_song(voice_client)
+        else:
+            print('Bot is not connected to a voice channel')
+            voice_client = None
+            await asyncio.sleep(5) # wait 5 seconds before trying to reconnect
+            voice_client = await voice_channel.connect()
+            print(f'Connected to voice channel {voice_channel.name}')
+    except Exception as e:
+        print(f'Error: {e}')
+
+client.run(bot_token)
