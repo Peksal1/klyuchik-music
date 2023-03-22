@@ -99,9 +99,9 @@ async def on_message(message):
     # Check that the message was not sent by the bot itself
     if message.author == client.user:
         return
-        
+
     # Check if the message contains 'крол' or 'кромь'
-    if random.random() > 0.95
+    if random.random() > 0.95:
         # Get the sender's nickname
         nickname = message.author.display_name
         # Choose a random verb and noun
