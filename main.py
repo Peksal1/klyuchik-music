@@ -5,6 +5,11 @@ from discord.ext import commands
 import random
 import os
 import discord.opus
+import requests
+
+
+twitch_api_url = f'https://api.twitch.tv/helix/streams?user_login=flocke456'
+TWITCH_CLIENT_ID = os.environ.get('TWITCH_CLIENT_ID')
 
 # Load the Opus library for audio encoding/decoding
 discord.opus.load_opus('libopus.so.0')
@@ -21,15 +26,15 @@ intents.members = True
 client = discord.Client(intents=intents)
 
 # List of YouTube video URLs to play
-video_urls = [
-    'https://www.youtube.com/watch?v=jumQ76GEYLQ', #
-    'https://www.youtube.com/watch?v=Cz5q05Hl5gs', #
-    'https://www.youtube.com/watch?v=Uift1RYej0w', #
-    'https://www.youtube.com/watch?v=qT_R_D3tCes', #
-    'https://www.youtube.com/watch?v=6IUqSY783_8', # собака писала
-    'https://www.youtube.com/watch?v=vkPXG11Fj_U', # шипупи
-    'https://www.youtube.com/watch?v=G6pqAN8ALC8', # пасха
-    'https://www.youtube.com/watch?v=azd1ZnHNt9g', # радужный гимн
+video_urls = [ 'https://www.youtube.com/watch?v=dh01eSOn9_E'
+    #'https://www.youtube.com/watch?v=jumQ76GEYLQ', #
+    #'https://www.youtube.com/watch?v=Cz5q05Hl5gs', #
+    #'https://www.youtube.com/watch?v=Uift1RYej0w', #
+    #'https://www.youtube.com/watch?v=qT_R_D3tCes', #
+    #'https://www.youtube.com/watch?v=6IUqSY783_8', # собака писала
+    #'https://www.youtube.com/watch?v=vkPXG11Fj_U', # шипупи
+    #'https://www.youtube.com/watch?v=G6pqAN8ALC8', # пасха
+   # 'https://www.youtube.com/watch?v=azd1ZnHNt9g', # радужный гимн
 ]
 
 async def play_song(voice_client):
@@ -60,6 +65,15 @@ async def play_song(voice_client):
 
 @client.event
 async def on_ready():
+       print('Logged in as {0.user}'.format(client))
+
+    # Check if the Twitch channel is live
+    response = requests.get(twitch_api_url, headers={'Client-ID': TWITCH_CLIENT_ID})
+    data = response.json()
+    if data['data']:
+        # The channel is live, send a message to the Discord channel
+        await channel.send('Брат хаминг включил стрим!')
+
     print(f'{client.user} has connected to Discord!')
 
     # Find the voice channel with the specified ID
@@ -117,7 +131,7 @@ async def on_message(message):
         return
 
     # 10%
-    if random.random() > 0.90:
+    if random.random() > 0.94:
         # Get the sender's nickname
         nickname = message.author.mention
         # Choose a random verb and noun
@@ -131,9 +145,8 @@ async def on_message(message):
             reply += f", {noun2}"
         # Send the reply message
         await message.channel.send(reply)
-    else:
-        # Randomly reply with a phrase 10% of the time
-        if random.random() < 0.05:
+    else if random.random() < 0.08:
+
             phrases = [
                 'Авг 1200 рио чел',
                 'невижу на почте 100000голд',
