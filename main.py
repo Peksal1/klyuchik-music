@@ -19,7 +19,6 @@ if not bot_token:
 intents = discord.Intents.default()
 intents.members = True
 client = discord.Client(intents=intents)
-bot = commands.Bot(command_prefix='!')  # Replace '!' with your desired command prefix
 
 # List of YouTube video URLs to play
 video_urls = [
