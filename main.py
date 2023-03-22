@@ -104,7 +104,7 @@ async def on_member_join(member):
     noun1 = random.choice(nouns1)
     noun2 = random.choice(nouns2) if random.random() < 0.2 else ''
     # Construct the greeting message
-    greeting = f"{member.mention}! {verb}, {verb2} {noun1}"
+    greeting = f"{member.mention} {verb}, добро пожаловать в ключик в дурку! {verb2} {noun1}"
     if noun2:
         greeting += f", {noun2}"
     # Send the greeting message
