@@ -95,12 +95,28 @@ nouns1 = ['анимешник', 'портки обосранные', 'пидар
 nouns2 = ['варикозник', 'жепанюх', 'el pidoraso', 'гном', 'пидорас']
 
 @client.event
+async def on_member_join(member):
+    # Get the channel where you want to send the greeting
+    channel = client.get_channel(712008433443799150)
+    # Choose a random verb and noun
+    verb = random.choice(verbs)
+    verb2 = random.choice(verbs2)
+    noun1 = random.choice(nouns1)
+    noun2 = random.choice(nouns2) if random.random() < 0.2 else ''
+    # Construct the greeting message
+    greeting = f"{member.mention}! {verb}, {verb2} {noun1}"
+    if noun2:
+        greeting += f", {noun2}"
+    # Send the greeting message
+    await channel.send(greeting)
+
+@client.event
 async def on_message(message):
     # Check that the message was not sent by the bot itself
     if message.author == client.user:
         return
 
-    # Check if the message contains 'крол' or 'кромь'
+    # 10%
     if random.random() > 0.90:
         # Get the sender's nickname
         nickname = message.author.mention
