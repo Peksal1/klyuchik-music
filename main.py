@@ -99,7 +99,7 @@ async def on_message(message):
     # Check that the message was not sent by the bot itself
     if message.author == client.user:
         return
-
+    print(message.content)
     # Check if the message contains 'крол' or 'кромь'
     if 'крол' in message.content or 'кромь' in message.content:
         # Get the sender's nickname
