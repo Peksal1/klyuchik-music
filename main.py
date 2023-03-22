@@ -110,7 +110,7 @@ async def on_message(message):
         noun1 = random.choice(nouns1)
         noun2 = random.choice(nouns2) if random.random() < 0.2 else ''
         # Construct the reply message
-        reply = f"@{nickname} {verb}, {verb2} {noun1}"
+        reply = f"{nickname.mention} {verb}, {verb2} {noun1}"
         if noun2:
             reply += f", {noun2}"
         # Send the reply message
