@@ -85,4 +85,25 @@ async def on_ready():
         except Exception as e:
             print(f'Error: {e}')
 
+@client.event
+async def on_message(message):
+    # Check that the message was not sent by the bot itself
+    if message.author == client.user:
+        return
+
+    # Randomly reply with a phrase 10% of the time
+    if random.random() < 0.1:
+        phrases = [
+            'Авг 1200 рио чел',
+            'Пидорасы',
+            'Гц?',
+            'красава, бро',
+            'пхахахах',
+        ]
+        reply = random.choice(phrases)
+        await message.channel.send(reply)
+
+    # Handle any other commands or messages as usual
+    await client.process_commands(message)
+
 client.run(bot_token)
