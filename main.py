@@ -103,14 +103,14 @@ async def on_message(message):
     # Check if the message contains 'крол' or 'кромь'
     if random.random() > 0.90:
         # Get the sender's nickname
-        nickname = message.author.display_name
+        nickname = message.author.mention
         # Choose a random verb and noun
         verb = random.choice(verbs)
         verb2 = random.choice(verbs2)
         noun1 = random.choice(nouns1)
         noun2 = random.choice(nouns2) if random.random() < 0.2 else ''
         # Construct the reply message
-        reply = f"{nickname.mention} {verb}, {verb2} {noun1}"
+        reply = f"{nickname} {verb}, {verb2} {noun1}"
         if noun2:
             reply += f", {noun2}"
         # Send the reply message
