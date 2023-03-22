@@ -1,4 +1,3 @@
-import discord
 import asyncio
 from pytube import YouTube
 from discord.ext import commands
