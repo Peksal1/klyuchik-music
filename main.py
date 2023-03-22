@@ -87,28 +87,52 @@ async def on_ready():
         except Exception as e:
             print(f'Error: {e}')
 
+
+# Define the verb and noun arrays
+verbs = ['пососи', 'пидор', 'сперма', 'чмо', 'членасос', "выродок", "говно", "карлик"]
+verbs2 = ['чё надо?', 'иди помойся', 'тебе пёрнуть?', 'а я ебу?', 'ключ закрыть? да иди нахуй', "я заебался тут торчать,", "пошли в танки", "ты без меня в ключ пошел?"]
+nouns1 = ['анимешник', 'портки обосранные', 'пидар', 'ore', 'хуесос']
+nouns2 = ['варикозник', 'жепанюх', 'el pidoraso', 'гном', 'пидорас']
+
 @client.event
 async def on_message(message):
     # Check that the message was not sent by the bot itself
     if message.author == client.user:
         return
 
-    # Randomly reply with a phrase 10% of the time
-    if random.random() < 0.1:
-        phrases = [
-            'Авг 1200 рио чел',
-            'невижу на почте 100000голд',
-            'как говарил один пьяный призедент',
-            'да мне насрать кто где летает',
-            'ля',
-            'жалование пришлите',
-            'Пидорасы',
-            'Гц?',
-            'красава, бро',
-            'пхахахах',
-        ]
-        reply = random.choice(phrases)
+    # Check if the message contains 'крол' or 'кромь'
+    if 'крол' in message.content or 'кромь' in message.content:
+        # Get the sender's nickname
+        nickname = message.author.display_name
+        # Choose a random verb and noun
+        verb = random.choice(verbs)
+        verb2 = random.choice(verbs2)
+        noun1 = random.choice(nouns1)
+        noun2 = random.choice(nouns2) if random.random() < 0.2 else ''
+        # Construct the reply message
+        reply = f"{nickname} {verb}, {verb2} {noun1}"
+        if noun2:
+            reply += f", {noun2}"
+        # Send the reply message
         await message.channel.send(reply)
+    else:
+        # Randomly reply with a phrase 10% of the time
+        if random.random() < 0.1:
+            phrases = [
+                'Авг 1200 рио чел',
+                'невижу на почте 100000голд',
+                'как говарил один пьяный призедент',
+                'да мне насрать кто где летает',
+                'ля',
+                'жалование пришлите',
+                'Пидорасы',
+                'Гц?',
+                'красава, бро',
+                'пхахахах',
+            ]
+            reply = random.choice(phrases)
+            await message.channel.send(reply)
+
 
     # Handle any other commands or messages as usual
     await client.process_commands(message)
