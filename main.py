@@ -11,8 +11,7 @@ import requests
 discord.opus.load_opus('libopus.so.0')
 users = {
     'peksal1': 'Бродерман',
-    'flocke456': 'Натика',
-    'zmok': None  # no nickname set for zmok
+    'flocke456': 'Натика'
 }
 user_statuses = {user: {'status': False, 'wow_nickname': users.get(user, 'user')} for user in users}
 
