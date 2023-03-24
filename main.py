@@ -9,16 +9,34 @@ import discord.opus
 # Load the Opus library for audio encoding/decoding
 discord.opus.load_opus('libopus.so.0')
 
-# Get the bot token from the environment variable
+# Get the bot token and Twitch client ID from environment variables
 bot_token = os.environ.get('DISCORD_BOT_TOKEN')
+twitch_client_id = os.environ.get('TWITCH_CLIENT_ID')
+twitch_access_token = os.environ.get('TWITCH_ACCESS_TOKEN')
 if not bot_token:
     print('Error: no bot token specified in DISCORD_BOT_TOKEN environment variable')
     exit(1)
+if not twitch_client_id:
+    print('Error: no Twitch client ID specified in TWITCH_CLIENT_ID environment variable')
+    exit(1)
+
 
 # Initialize the Discord client
 intents = discord.Intents.default()
 intents.members = True
 client = discord.Client(intents=intents)
+
+# Set the Twitch API endpoint and headers
+twitch_api_endpoint = 'https://api.twitch.tv/helix/streams?user_login=peksal1'
+twitch_api_headers = {
+    'Client-ID': twitch_client_id,
+    'Authorization': 'Bearer ' + twitch_access_token
+}
+
+
+# Get the Discord text channel where you want to announce the live status
+announcement_channel_id = 712008433443799150 # replace with the ID of your channel
+announcement_channel = None
 
 # List of YouTube video URLs to play
 video_urls = [
@@ -60,6 +78,25 @@ async def play_song(voice_client):
 
 @client.event
 async def on_ready():
+        global announcement_channel
+    announcement_channel = client.get_channel(announcement_channel_id)
+    print(f'Logged in as {client.user} and ready to announce live status in #{announcement_channel.name}')
+
+async def announce_live_status():
+    # Check the Twitch API to see if the channel is live
+    response = requests.get(twitch_api_endpoint, headers=twitch_api_headers)
+    if response.status_code == 200:
+        data = response.json()
+        if data['data'] and data['data'][0]['type'] == 'live':
+            # The channel is live, so announce it in the Discord channel
+            await announcement_channel.send('@everyone peksal1 is now live! Watch at https://www.twitch.tv/peksal1')
+        else:
+            # The channel is not live
+            print('peksal1 is currently offline')
+    else:
+        # There was an error with the Twitch API request
+        print(f'Error getting live status for peksal1: {response.status_code}')
+
     print(f'{client.user} has connected to Discord!')
 
     # Find the voice channel with the specified ID
@@ -151,4 +188,6 @@ async def on_message(message):
             reply = random.choice(phrases)
             await message.channel.send(reply)
 
+# Schedule the live status announcement to run every 5 minutes
+client.loop.create_task(announce_live_status())
 client.run(bot_token)
