@@ -13,8 +13,6 @@ discord.opus.load_opus('libopus.so.0')
 bot_token = os.environ.get('DISCORD_BOT_TOKEN')
 twitch_client_id = os.environ.get('TWITCH_CLIENT_ID')
 twitch_access_token = os.environ.get('TWITCH_ACCESS_TOKEN')
-print(f'twitch_client_id: {twitch_client_id}')
-print(f'twitch_access_token: {twitch_access_token}')
 if not bot_token:
     print('Error: no bot token specified in DISCORD_BOT_TOKEN environment variable')
     exit(1)
