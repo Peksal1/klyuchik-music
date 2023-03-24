@@ -9,7 +9,8 @@ import requests
 
 # Load the Opus library for audio encoding/decoding
 discord.opus.load_opus('libopus.so.0')
-users = ['peksal1', 'flocke456', 'dafran']
+users = ['peksal1', 'flocke456', 'zmok']
+user_statuses = {}  # dictionary to store the previous streaming status for each user
 endpoint = 'https://klyuchik-v-durku-backend.herokuapp.com/is-streaming/'
 # Get the bot token from the environment variable
 bot_token = os.environ.get('DISCORD_BOT_TOKEN')
@@ -41,19 +42,21 @@ async def check_streaming_status(user):
             data = response.json()
             is_streaming = data['isStreaming']
 
-            # User has started streaming
-            if is_streaming:
-                print(f'{user} включил стрим!')
-                # Replace 712008433443799150 with your Discord channel ID
-                channel = client.get_channel(712008433443799150)
-                await channel.send(f'{user} включил стрим!')
+            # Check if streaming status has changed
+            if user in user_statuses and user_statuses[user] != is_streaming:
+                if is_streaming:
+                    print(f'{user} включил стрим!')
+                    # Replace 712008433443799150 with your Discord channel ID
+                    channel = client.get_channel(712008433443799150)
+                    await channel.send(f'{user} включил стрим! Заходим на https://www.twitch.tv/{user}')
+                else:
+                    print(f'{user} выключил стрим!')
+                    # Replace 712008433443799150 with your Discord channel ID
+                    channel = client.get_channel(712008433443799150)
+                    await channel.send(f'{user} выключил стрим!')
 
-            # User has stopped streaming
-            else:
-                print(f'{user} выключил стрим!')
-                # Replace 712008433443799150 with your Discord channel ID
-                channel = client.get_channel(712008433443799150)
-                await channel.send(f'{user} выключил стрим!')
+            # Update streaming status
+            user_statuses[user] = is_streaming
 
             # Wait 5 minutes before checking again
             await asyncio.sleep(300)
@@ -62,6 +65,7 @@ async def check_streaming_status(user):
             print(f'Error: {e}')
             # Wait 30 seconds before trying again
             await asyncio.sleep(30)
+
 
 async def play_song(voice_client):
     # Choose a random video URL from the list
