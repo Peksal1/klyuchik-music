@@ -175,7 +175,7 @@ async def on_message(message):
             reply += f", {noun2}"
         # Send the reply message
         await message.channel.send(reply)
-    else if random.random() < 0.05:
+    elif random.random() < 0.05:
         # Randomly reply with a phrase 5% of the time
             phrases = [
                 'Авг 1200 рио чел',
