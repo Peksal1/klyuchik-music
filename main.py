@@ -26,6 +26,14 @@ intents = discord.Intents.default()
 intents.members = True
 client = discord.Client(intents=intents)
 
+# Set the Twitch API endpoint and headers
+twitch_api_endpoint = 'https://api.twitch.tv/helix/streams?user_login=peksal1'
+twitch_api_headers = {
+    'Client-ID': twitch_client_id,
+    'Authorization': 'Bearer ' + twitch_access_token
+}
+
+
 # Get the Discord text channel where you want to announce the live status
 announcement_channel_id = 712008433443799150 # replace with the ID of your channel
 announcement_channel = None
@@ -70,51 +78,24 @@ async def play_song(voice_client):
 
 @client.event
 async def on_ready():
-    global announcement_channel
+        global announcement_channel
     announcement_channel = client.get_channel(announcement_channel_id)
     print(f'Logged in as {client.user} and ready to announce live status in #{announcement_channel.name}')
 
-    # Set the Twitch API endpoint and headers
-    twitch_api_endpoint = f'https://api.twitch.tv/helix/streams?user_login=dafran'
-    twitch_api_headers = {
-        'Client-ID': twitch_client_id,
-        'Authorization': f'Bearer {twitch_access_token}'
-    }
-
-    while True:
-        # Check the Twitch API to see if the channel is live
-        response = requests.get(twitch_api_endpoint, headers=twitch_api_headers)
-        if response.status_code == 200:
-            data = response.json()
-            if data['data'] and data['data'][0]['type'] == 'live':
-                # The channel is live, so announce it in the Discord channel
-                await announcement_channel.send('@everyone dafran is now live! Watch at https://www.twitch.tv/peksadafranl1')
-
-                # Find the voice channel with the specified ID
-                voice_channel = client.get_channel(712008433443799151)
-                if not voice_channel:
-                    print(f'Error: could not find voice channel with ID 712008433443799151')
-                    exit(1)
-                print(f'Connecting to voice channel {voice_channel.name} ({voice_channel.id})')
-
-                # Connect to the voice channel
-                voice_client = await voice_channel.connect()
-                print(f'Connected to voice channel {voice_channel.name}')
-
-                # Play a song in the voice channel
-                await play_song(voice_client)
-
-                # Disconnect from the voice channel
-                await voice_client.disconnect()
-            else:
-                # The channel is not live
-                print('peksal1 is currently offline')
+async def announce_live_status():
+    # Check the Twitch API to see if the channel is live
+    response = requests.get(twitch_api_endpoint, headers=twitch_api_headers)
+    if response.status_code == 200:
+        data = response.json()
+        if data['data'] and data['data'][0]['type'] == 'live':
+            # The channel is live, so announce it in the Discord channel
+            await announcement_channel.send('@everyone peksal1 is now live! Watch at https://www.twitch.tv/peksal1')
         else:
-            # There was an error with the Twitch API request
-            print(f'Error getting live status for peksal1: {response.status_code}')
-
-        # Wait 60 seconds before checking the channel status again
-        await asyncio.sleep(60)
+            # The channel is not live
+            print('peksal1 is currently offline')
+    else:
+        # There was an error with the Twitch API request
+        print(f'Error getting live status for peksal1: {response.status_code}')
 
     print(f'{client.user} has connected to Discord!')
 
@@ -207,5 +188,6 @@ async def on_message(message):
             reply = random.choice(phrases)
             await message.channel.send(reply)
 
-
+# Schedule the live status announcement to run every 5 minutes
+client.loop.create_task(announce_live_status())
 client.run(bot_token)
