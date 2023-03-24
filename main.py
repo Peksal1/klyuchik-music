@@ -5,10 +5,12 @@ from discord.ext import commands
 import random
 import os
 import discord.opus
+import requests
 
 # Load the Opus library for audio encoding/decoding
 discord.opus.load_opus('libopus.so.0')
-
+users = ['peksal1', 'flocke456', 'dafran']
+endpoint = 'https://klyuchik-v-durku-backend.herokuapp.com/is-streaming/'
 # Get the bot token from the environment variable
 bot_token = os.environ.get('DISCORD_BOT_TOKEN')
 if not bot_token:
@@ -31,6 +33,35 @@ video_urls = [
     'https://www.youtube.com/watch?v=G6pqAN8ALC8', # пасха
     'https://www.youtube.com/watch?v=azd1ZnHNt9g', # радужный гимн
 ]
+
+async def check_streaming_status(user):
+    while True:
+        try:
+            response = requests.get(endpoint + user)
+            data = response.json()
+            is_streaming = data['isStreaming']
+
+            # User has started streaming
+            if is_streaming:
+                print(f'{user} включил стрим!')
+                # Replace 712008433443799150 with your Discord channel ID
+                channel = client.get_channel(712008433443799150)
+                await channel.send(f'{user} включил стрим!')
+
+            # User has stopped streaming
+            else:
+                print(f'{user} выключил стрим!')
+                # Replace 712008433443799150 with your Discord channel ID
+                channel = client.get_channel(712008433443799150)
+                await channel.send(f'{user} выключил стрим!')
+
+            # Wait 5 minutes before checking again
+            await asyncio.sleep(300)
+
+        except Exception as e:
+            print(f'Error: {e}')
+            # Wait 30 seconds before trying again
+            await asyncio.sleep(30)
 
 async def play_song(voice_client):
     # Choose a random video URL from the list
@@ -72,6 +103,10 @@ async def on_ready():
     # Connect to the voice channel
     voice_client = await voice_channel.connect()
     print(f'Connected to voice channel {voice_channel.name}')
+
+    # Start checking streaming status for each user in the array
+    for user in users:
+        asyncio.create_task(check_streaming_status(user))
 
     # Start playing songs in a loop
     while True:
