@@ -110,7 +110,7 @@ async def on_ready():
 
     # Start checking streaming status for each user in the array
     for user in users:
-        asyncio.create_task(check_streaming_status(user))
+        asyncio.ensure_future(check_streaming_status(user))
 
     # Start playing songs in a loop
     while True:
