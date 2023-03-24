@@ -1,10 +1,10 @@
 import asyncio
 import discord
 from pytube import YouTube
+from discord.ext import commands
 import random
 import os
 import discord.opus
-import requests
 
 # Load the Opus library for audio encoding/decoding
 discord.opus.load_opus('libopus.so.0')
