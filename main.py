@@ -9,8 +9,13 @@ import requests
 
 # Load the Opus library for audio encoding/decoding
 discord.opus.load_opus('libopus.so.0')
-users = ['peksal1', 'flocke456', 'zmok']
-user_statuses = {user: False for user in users}
+users = {
+    'peksal1': 'Бродерман',
+    'flocke456': 'Натика',
+    'zmok': None  # no nickname set for zmok
+}
+user_statuses = {user: {'status': False, 'wow_nickname': users.get(user, 'user')} for user in users}
+
 endpoint = 'https://klyuchik-v-durku-backend.herokuapp.com/is-streaming/'
 # Get the bot token from the environment variable
 bot_token = os.environ.get('DISCORD_BOT_TOKEN')
@@ -21,7 +26,7 @@ if not bot_token:
 # Initialize the Discord client
 intents = discord.Intents.default()
 intents.members = True
-client = discord.Client(intents=intents)
+client = discord.Client(intents=intents, port=os.environ.get('PORT'))
 
 # List of YouTube video URLs to play
 video_urls = [
@@ -43,20 +48,20 @@ async def check_streaming_status(user):
             is_streaming = data['isStreaming']
 
             # Check if streaming status has changed
-            if user in user_statuses and user_statuses[user] != is_streaming:
+            if user in user_statuses and user_statuses[user]['status'] != is_streaming:
                 if is_streaming:
-                    print(f'{user} включил стрим!')
+                    print(f'{user_statuses[user]["wow_nickname"]} включил стрим!')
                     # Replace 712008433443799150 with your Discord channel ID
-                    channel = client.get_channel(712008433443799150)
-                    await channel.send(f'{user} включил стрим! Заходим на https://www.twitch.tv/{user}')
+                    channel = client.get_channel(1088848545261572116)
+                    await channel.send(f'{user_statuses[user]["wow_nickname"]} включил стрим! Заходим на https://www.twitch.tv/{user}')
                 else:
-                    print(f'{user} выключил стрим!')
+                    print(f'{user_statuses[user]["wow_nickname"]} выключил стрим!')
                     # Replace 712008433443799150 with your Discord channel ID
-                    channel = client.get_channel(712008433443799150)
-                    await channel.send(f'{user} выключил стрим!')
+                    channel = client.get_channel(1088848545261572116)
+                    await channel.send(f'{user_statuses[user]["wow_nickname"]} выключил стрим!')
 
             # Update streaming status
-            user_statuses[user] = is_streaming
+            user_statuses[user]['status'] = is_streaming
 
             # Wait 5 minutes before checking again
             await asyncio.sleep(300)
@@ -130,8 +135,8 @@ async def on_ready():
 # Define the verb and noun arrays
 verbs = ['пососи', 'пидор', 'сперма', 'чмо', 'членасос', "выродок", "говно", "карлик"]
 verbs2 = ['чё надо?', 'иди помойся', 'тебе пёрнуть?', 'а я ебу?', 'ключ закрыть? да иди нахуй', "я заебался тут торчать,", "пошли в танки", "ты без меня в ключ пошел?"]
-nouns1 = ['анимешник', 'портки обосранные', 'пидар', 'ore', 'хуесос', "еще пэнсел, пэнсил покричи", "милидэнсер хуев"]
-nouns2 = ['варикозник', 'жепанюх', 'el pidoraso', 'гном', 'пидорас']
+nouns1 = ['анимешник', 'портки обосранные', 'пидар', 'ore', 'хуесос', 'Ле перфекто!', "еще пэнсел, пэнсил покричи", "милидэнсер хуев"]
+nouns2 = ['варикозник', 'жепанюх', 'el pidoraso', 'гном', 'пидорас', 'Ле перфекто!']
 
 @client.event
 async def on_member_join(member):
@@ -155,8 +160,8 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    # 10%
-    if random.random() > 0.90:
+    # 5%
+    if random.random() > 0.95:
         # Get the sender's nickname
         nickname = message.author.mention
         # Choose a random verb and noun
@@ -170,9 +175,8 @@ async def on_message(message):
             reply += f", {noun2}"
         # Send the reply message
         await message.channel.send(reply)
-    else:
-        # Randomly reply with a phrase 10% of the time
-        if random.random() < 0.05:
+    else if random.random() < 0.05:
+        # Randomly reply with a phrase 5% of the time
             phrases = [
                 'Авг 1200 рио чел',
                 'невижу на почте 100000голд',
@@ -186,6 +190,8 @@ async def on_message(message):
                 'Гц?',
                 'красава, бро',
                 'пхахахах',
+                'Пошла ебка',
+                'Ле перфекто!'
             ]
             reply = random.choice(phrases)
             await message.channel.send(reply)
