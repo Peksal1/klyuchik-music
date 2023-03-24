@@ -10,7 +10,7 @@ import requests
 # Load the Opus library for audio encoding/decoding
 discord.opus.load_opus('libopus.so.0')
 users = ['peksal1', 'flocke456', 'zmok']
-user_statuses = {}  # dictionary to store the previous streaming status for each user
+user_statuses = {user: False for user in users}
 endpoint = 'https://klyuchik-v-durku-backend.herokuapp.com/is-streaming/'
 # Get the bot token from the environment variable
 bot_token = os.environ.get('DISCORD_BOT_TOKEN')
