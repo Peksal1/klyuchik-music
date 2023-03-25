@@ -29,14 +29,31 @@ client = discord.Client(intents=intents, port=os.environ.get('PORT'))
 
 # List of YouTube video URLs to play
 video_urls = [
-    'https://www.youtube.com/watch?v=jumQ76GEYLQ', #
-    'https://www.youtube.com/watch?v=Cz5q05Hl5gs', #
-    'https://www.youtube.com/watch?v=Uift1RYej0w', #
-    'https://www.youtube.com/watch?v=qT_R_D3tCes', #
-    'https://www.youtube.com/watch?v=6IUqSY783_8', # собака писала
-    'https://www.youtube.com/watch?v=vkPXG11Fj_U', # шипупи
-    'https://www.youtube.com/watch?v=G6pqAN8ALC8', # пасха
-    'https://www.youtube.com/watch?v=azd1ZnHNt9g', # радужный гимн
+    #'https://www.youtube.com/watch?v=jumQ76GEYLQ', #
+    #'https://www.youtube.com/watch?v=Cz5q05Hl5gs', #
+    #'https://www.youtube.com/watch?v=Uift1RYej0w', #
+    #'https://www.youtube.com/watch?v=qT_R_D3tCes', #
+   # 'https://www.youtube.com/watch?v=6IUqSY783_8', # собака писала
+   # 'https://www.youtube.com/watch?v=vkPXG11Fj_U', # шипупи
+    #'https://www.youtube.com/watch?v=G6pqAN8ALC8', # пасха
+    #'https://www.youtube.com/watch?v=azd1ZnHNt9g', # радужный гимн
+    #'https://www.youtube.com/watch?v=t4TnTqH6E8M', # Мальчик на девятке
+    'https://www.youtube.com/watch?v=pUROT2f6azM', # drop
+    'https://www.youtube.com/watch?v=heLj63wUIrk', # gender
+    'https://www.youtube.com/watch?v=PpSTwj6Plc8', # gravy train 
+    'https://www.youtube.com/watch?v=6bYEtcwDhU8', # mdma
+    'https://www.youtube.com/watch?v=e-ndA04nCao', # do it like a russian
+    'https://www.youtube.com/watch?v=XjrPJRwY3s0', # bassmark
+    'https://www.youtube.com/watch?v=fKopy74weus', # thunder
+    'https://www.youtube.com/watch?v=QvyclAhWlAY', # shaman king
+    'https://www.youtube.com/watch?v=6Wvda9AkDnM', # zombie
+    'https://www.youtube.com/watch?v=YZKESqe4MIU', # monkeys
+    'https://www.youtube.com/watch?v=KR-eV7fHNbM', # calling
+    'https://www.youtube.com/watch?v=I_2D8Eo15wE', # black betty
+    'https://www.youtube.com/watch?v=8sz2kxRxfzM', # мое сердце
+    'https://www.youtube.com/watch?v=K6BRna4_bmg', # edamame
+    'https://www.youtube.com/watch?v=p47fEXGabaY', # livin da vida loca
+    'https://www.youtube.com/watch?v=MxJKqd8sPy0', # holding on
 ]
 
 async def check_streaming_status(user):
