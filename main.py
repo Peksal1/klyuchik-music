@@ -26,7 +26,7 @@ if not bot_token:
 # Initialize the Discord client
 intents = discord.Intents.default()
 
-bot = commands.Bot(command_prefix='/')
+bot = commands.Bot(command_prefix='/', intents=intents)
 intents.members = True
 client = discord.Client(intents=intents, port=os.environ.get('PORT'))
 
@@ -59,7 +59,7 @@ async def list(ctx):
     else:
         urls_str = '\n'.join([f'{u[1]}: {u[0]}' for u in video_urls])
         await ctx.send(f'Video URLs:\n{urls_str}')
-        
+
 # List of YouTube video URLs to play
 video_urls = [
     #'https://www.youtube.com/watch?v=jumQ76GEYLQ', #
