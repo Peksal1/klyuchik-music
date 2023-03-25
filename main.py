@@ -6,6 +6,7 @@ import random
 import os
 import discord.opus
 import requests
+import re
 
 # Load the Opus library for audio encoding/decoding
 discord.opus.load_opus('libopus.so.0')
@@ -24,9 +25,41 @@ if not bot_token:
 
 # Initialize the Discord client
 intents = discord.Intents.default()
+
+bot = commands.Bot(command_prefix='/')
 intents.members = True
 client = discord.Client(intents=intents, port=os.environ.get('PORT'))
 
+url_regex = re.compile(r'^https?://(?:www\.)?youtube\.com/watch\?v=([A-Za-z0-9_-]{11})$')
+
+@bot.command()
+async def add(ctx, url: str, name: str):
+    if 'youtube.com' not in url:
+        await ctx.send('Invalid URL. Only YouTube URLs are allowed.')
+    else:
+        video_urls.append((url, name))
+        await ctx.send(f'Added {name} ({url}) to video URLs.')
+
+@bot.command()
+async def remove(ctx, name: str):
+    urls_to_remove = [u for u in video_urls if u[1] == name]
+    if len(urls_to_remove) == 0:
+        await ctx.send(f'No video URLs found with the name {name}.')
+    elif len(urls_to_remove) == 1:
+        video_urls.remove(urls_to_remove[0])
+        await ctx.send(f'Removed {name} from video URLs.')
+    else:
+        urls_str = '\n'.join([u[0] for u in urls_to_remove])
+        await ctx.send(f'There are multiple video URLs with the name {name}:\n{urls_str}\nPlease use the name that corresponds to the URL you want to remove.')
+
+@bot.command()
+async def list(ctx):
+    if len(video_urls) == 0:
+        await ctx.send('No video URLs added yet.')
+    else:
+        urls_str = '\n'.join([f'{u[1]}: {u[0]}' for u in video_urls])
+        await ctx.send(f'Video URLs:\n{urls_str}')
+        
 # List of YouTube video URLs to play
 video_urls = [
     #'https://www.youtube.com/watch?v=jumQ76GEYLQ', #
