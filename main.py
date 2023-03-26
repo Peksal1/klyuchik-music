@@ -26,9 +26,8 @@ if not bot_token:
 # Initialize the Discord client
 intents = discord.Intents.default()
 
-bot = commands.Bot(command_prefix='/', intents=intents)
 intents.members = True
-client = discord.Client(intents=intents, port=os.environ.get('PORT'))
+client = discord.Client(command_prefix='/', intents=intents, port=os.environ.get('PORT'))
 
 url_regex = re.compile(r'^https?://(?:www\.)?youtube\.com/watch\?v=([A-Za-z0-9_-]{11})$')
 
@@ -232,7 +231,7 @@ async def on_message(message):
                 'как говарил один пьяный призедент',
                 'да мне насрать кто где летает',
                 "милидэнс",
-                "пэнсел"
+                "пэнсел",
                 'ля',
                 'жалование пришлите',
                 'Пидорасы',
