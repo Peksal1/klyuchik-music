@@ -244,5 +244,6 @@ async def on_message(message):
             ]
             reply = random.choice(phrases)
             await message.channel.send(reply)
+            await client.process_commands(message)            
 
 client.run(bot_token)
