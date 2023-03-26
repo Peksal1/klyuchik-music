@@ -205,6 +205,10 @@ async def on_member_join(member):
 
 @client.event
 async def on_message(message):
+    await client.process_commands(message)
+    
+@client.event
+async def on_message(message):
     
     # Check that the message was not sent by the bot itself
     if message.author == client.user:
@@ -245,6 +249,5 @@ async def on_message(message):
             ]
             reply = random.choice(phrases)
             await message.channel.send(reply)        
-await client.process_commands(message)    
 
 client.run(bot_token)
