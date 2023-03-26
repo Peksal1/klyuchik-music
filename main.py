@@ -27,7 +27,7 @@ if not bot_token:
 intents = discord.Intents.default()
 
 intents.members = True
-client = discord.Client(, intents=intents, port=os.environ.get('PORT'))
+client = discord.Client(intents=intents, port=os.environ.get('PORT'))
 client = commands.Bot(command_prefix='/', intents=intents)
 
 url_regex = re.compile(r'^https?://(?:www\.)?youtube\.com/watch\?v=([A-Za-z0-9_-]{11})$')
