@@ -4,7 +4,6 @@ from pytube import YouTube
 from discord.ext import commands
 import random
 import os
-import discord.opus
 import requests
 import re
 
@@ -27,38 +26,9 @@ if not bot_token:
 intents = discord.Intents.default()
 
 intents.members = True
-client = discord.Client(intents=intents, port=os.environ.get('PORT'))
 client = commands.Bot(command_prefix='/', intents=intents)
 
 url_regex = re.compile(r'^https?://(?:www\.)?youtube\.com/watch\?v=([A-Za-z0-9_-]{11})$')
-
-@client.command()
-async def add(ctx, url: str, name: str):
-    if 'youtube.com' not in url:
-        await ctx.send('Неверная ссылка. Только ссылки на YouTube разрешены.')
-    else:
-        video_urls.append((url, name))
-        await ctx.send(f'Добавил {name} ({url}) в плейлист.')
-
-@client.command()
-async def remove(ctx, name: str):
-    urls_to_remove = [u for u in video_urls if u[1] == name]
-    if len(urls_to_remove) == 0:
-        await ctx.send(f' {name} не найдено в плейлисте.')
-    elif len(urls_to_remove) == 1:
-        video_urls.remove(urls_to_remove[0])
-        await ctx.send(f'Убрал {name} из плейлиста.')
-    else:
-        urls_str = '\n'.join([u[0] for u in urls_to_remove])
-        await ctx.send(f'Пдейдись содержит несколько записей с названием {name}:\n{urls_str}\nПожалуйста, используйте имя трека, который вы хотите удалить.')
-
-@client.command()
-async def list(ctx):
-    if len(video_urls) == 0:
-        await ctx.send('Плейлист пуст.')
-    else:
-        urls_str = '\n'.join([f'{u[1]}: {u[0]}' for u in video_urls])
-        await ctx.send(f'Плейлист:\n{urls_str}')
 
 # List of YouTube video URLs to play
 video_urls = [
@@ -88,6 +58,36 @@ video_urls = [
     'https://www.youtube.com/watch?v=p47fEXGabaY', # livin da vida loca
     'https://www.youtube.com/watch?v=MxJKqd8sPy0', # holding on
 ]
+
+
+@client.command()
+async def add(ctx, url: str, name: str):
+    if 'youtube.com' not in url:
+        await ctx.send('Неверная ссылка. Только ссылки на YouTube разрешены.')
+    else:
+        video_urls.append((url, name))
+        await ctx.send(f'Добавил {name} ({url}) в плейлист.')
+
+@client.command()
+async def remove(ctx, name: str):
+    urls_to_remove = [u for u in video_urls if u[1] == name]
+    if len(urls_to_remove) == 0:
+        await ctx.send(f' {name} не найдено в плейлисте.')
+    elif len(urls_to_remove) == 1:
+        video_urls.remove(urls_to_remove[0])
+        await ctx.send(f'Убрал {name} из плейлиста.')
+    else:
+        urls_str = '\n'.join([u[0] for u in urls_to_remove])
+        await ctx.send(f'Пдейдись содержит несколько записей с названием {name}:\n{urls_str}\nПожалуйста, используйте имя трека, который вы хотите удалить.')
+
+@client.command()
+async def list(ctx):
+    if len(video_urls) == 0:
+        await ctx.send('Плейлист пуст.')
+    else:
+        urls_str = '\n'.join([f'{u[1]}: {u[0]}' for u in video_urls])
+        await ctx.send(f'Плейлист:\n{urls_str}')
+
 
 async def check_streaming_status(user):
     while True:
