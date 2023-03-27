@@ -59,6 +59,10 @@ video_urls = [
     'https://www.youtube.com/watch?v=MxJKqd8sPy0', # holding on
 ]
 
+zapuskatory = [
+    'запускаем жопохуя работяги\n░░░░░░░░░░░░▄▀▀▀▀▄░░░\n░░░░░░░░░░▄▀░░▄░▄░█░░\n░▄▄░░░░░▄▀░░░░▄▄▄▄█░░\n█░░▀▄░▄▀░░░░░░░░░░█░░\n░▀▄░░▀▄░░░░█░░░░░░█░░\n░░░▀▄░░▀░░░█░░░░░░█░░\n░░░▄▀░░░░░░█░░░░▄▀░░░\n░░░▀▄▀▄▄▀░░█▀░▄▀░░░░░\n░░░░░░░░█▀▀█▀▀░░░░░░░\n░░░░░░░░▀▀░▀▀░░░░░░░░',
+    'ЗАПУСКАЕМ\n░ГУСЯ░▄▀▀▀▄░РАБОТЯГИ░░\n▄███▀░◐░░░▌░░░░░░░\n░░░░▌░░░░░▐░░░░░░░\n░░░░▐░░░░░▐░░░░░░░\n░░░░▌░░░░░▐▄▄░░░░░\n░░░░▌░░░░▄▀▒▒▀▀▀▀▄\n░░░▐░░░░▐▒▒▒▒▒▒▒▒▀▀▄\n░░░▐░░░░▐▄▒▒▒▒▒▒▒▒▒▒▀▄\n░░░░▀▄░░░░▀▄▒▒▒▒▒▒▒▒▒▒▀▄\n░░░░░░▀▄▄▄▄▄█▄▄▄▄▄▄▄▄▄▄▄▀▄\n░░░░░░░░░░░▌▌▌▌░░░░░\n░░░░░░░░░░░▌▌░▌▌░░░░░\n░░░░░░░░░▄▄▌▌▄▌▌░░░░░'
+]
 
 @client.command()
 async def add(ctx, url: str, name: str):
@@ -163,8 +167,8 @@ async def on_ready():
     print(f'Connected to voice channel {voice_channel.name}')
 
     # Start checking streaming status for each user in the array
-    for user in users:
-        asyncio.ensure_future(check_streaming_status(user))
+     for user in users:
+         asyncio.ensure_future(check_streaming_status(user))
 
     # Start playing songs in a loop
     while True:
@@ -179,6 +183,11 @@ async def on_ready():
                 print(f'Connected to voice channel {voice_channel.name}')
         except Exception as e:
             print(f'Error: {e}')
+            
+        # send a random message every 12-36 hours (randomly)
+        await asyncio.sleep(random.randint(12*60*60, 36*60*60))
+        message = random.choice(zapuskatory)
+        await client.get_channel(712008433443799150).send(message)
 
 
 # Define the verb and noun arrays
