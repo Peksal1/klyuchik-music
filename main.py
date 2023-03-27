@@ -224,7 +224,7 @@ async def on_message(message):
         return
 
     # 5%
-    if random.random() > 0.50:
+    if random.random() > 0.95:
         # Get the sender's nickname
         nickname = message.author.mention
         # Choose a random verb and noun
@@ -238,7 +238,7 @@ async def on_message(message):
             reply += f", {noun2}"
         # Send the reply message
         await message.channel.send(reply)
-    elif random.random() < 0.50:
+    elif random.random() < 0.95:
         # Randomly reply with a phrase 5% of the time
             phrases = [
                 'Авг 1200 рио чел',
