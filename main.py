@@ -154,7 +154,7 @@ async def play_song(voice_client):
 @client.event
 async def on_ready():
     print(f'{client.user} has connected to Discord!')
-
+    await client.get_channel(712008433443799150).send(random.choice(zapuskatory))
     # Find the voice channel with the specified ID
     voice_channel = client.get_channel(712008433443799151)
     if not voice_channel:
