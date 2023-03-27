@@ -167,7 +167,7 @@ async def on_ready():
     print(f'Connected to voice channel {voice_channel.name}')
 
     # Start checking streaming status for each user in the array
-     for user in users:
+    for user in users:
          asyncio.ensure_future(check_streaming_status(user))
 
     # Start playing songs in a loop
