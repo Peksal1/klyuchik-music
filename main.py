@@ -11,7 +11,8 @@ import re
 discord.opus.load_opus('libopus.so.0')
 users = {
     'peksal1': 'Бродерман',
-    'flocke456': 'Натика'
+    'flocke456': 'Натика',
+    'causelovehurts' : 'Твояхозяйка'
 }
 user_statuses = {user: {'status': False, 'wow_nickname': users.get(user, 'user')} for user in users}
 
@@ -47,7 +48,6 @@ video_urls = [
     'https://www.youtube.com/watch?v=6bYEtcwDhU8', # mdma
     'https://www.youtube.com/watch?v=e-ndA04nCao', # do it like a russian
     'https://www.youtube.com/watch?v=XjrPJRwY3s0', # bassmark
-    'https://www.youtube.com/watch?v=fKopy74weus', # thunder
     'https://www.youtube.com/watch?v=QvyclAhWlAY', # shaman king
     'https://www.youtube.com/watch?v=6Wvda9AkDnM', # zombie
     'https://www.youtube.com/watch?v=YZKESqe4MIU', # monkeys
@@ -55,12 +55,12 @@ video_urls = [
     'https://www.youtube.com/watch?v=I_2D8Eo15wE', # black betty
     'https://www.youtube.com/watch?v=8sz2kxRxfzM', # мое сердце
     'https://www.youtube.com/watch?v=K6BRna4_bmg', # edamame
-    'https://www.youtube.com/watch?v=p47fEXGabaY', # livin da vida loca
     'https://www.youtube.com/watch?v=MxJKqd8sPy0', # holding on
 ]
 
 zapuskatory = [
     'запускаем жопохуя работяги\n░░░░░░░░░░░░▄▀▀▀▀▄░░░\n░░░░░░░░░░▄▀░░▄░▄░█░░\n░▄▄░░░░░▄▀░░░░▄▄▄▄█░░\n█░░▀▄░▄▀░░░░░░░░░░█░░\n░▀▄░░▀▄░░░░█░░░░░░█░░\n░░░▀▄░░▀░░░█░░░░░░█░░\n░░░▄▀░░░░░░█░░░░▄▀░░░\n░░░▀▄▀▄▄▀░░█▀░▄▀░░░░░\n░░░░░░░░█▀▀█▀▀░░░░░░░\n░░░░░░░░▀▀░▀▀░░░░░░░░',
+    'макаем',
     'ЗАПУСКАЕМ\n░ГУСЯ░▄▀▀▀▄░РАБОТЯГИ░░\n▄███▀░◐░░░▌░░░░░░░\n░░░░▌░░░░░▐░░░░░░░\n░░░░▐░░░░░▐░░░░░░░\n░░░░▌░░░░░▐▄▄░░░░░\n░░░░▌░░░░▄▀▒▒▀▀▀▀▄\n░░░▐░░░░▐▒▒▒▒▒▒▒▒▀▀▄\n░░░▐░░░░▐▄▒▒▒▒▒▒▒▒▒▒▀▄\n░░░░▀▄░░░░▀▄▒▒▒▒▒▒▒▒▒▒▀▄\n░░░░░░▀▄▄▄▄▄█▄▄▄▄▄▄▄▄▄▄▄▀▄\n░░░░░░░░░░░▌▌▌▌░░░░░\n░░░░░░░░░░░▌▌░▌▌░░░░░\n░░░░░░░░░▄▄▌▌▄▌▌░░░░░'
 ]
 
@@ -103,15 +103,15 @@ async def check_streaming_status(user):
             # Check if streaming status has changed
             if user in user_statuses and user_statuses[user]['status'] != is_streaming:
                 if is_streaming:
-                    print(f'{user_statuses[user]["wow_nickname"]} включил стрим!')
+                    print(f'{user_statuses[user]["wow_nickname"]} включил(а) стрим!')
                     # Replace 712008433443799150 with your Discord channel ID
                     channel = client.get_channel(1088848545261572116)
-                    await channel.send(f'{user_statuses[user]["wow_nickname"]} включил стрим! Заходим на https://www.twitch.tv/{user}')
+                    await channel.send(f'{user_statuses[user]["wow_nickname"]} включил(а) стрим! Заходим на https://www.twitch.tv/{user}')
                 else:
-                    print(f'{user_statuses[user]["wow_nickname"]} выключил стрим!')
+                    print(f'{user_statuses[user]["wow_nickname"]} выключил(а) стрим!')
                     # Replace 712008433443799150 with your Discord channel ID
                     channel = client.get_channel(1088848545261572116)
-                    await channel.send(f'{user_statuses[user]["wow_nickname"]} выключил стрим!')
+                    await channel.send(f'{user_statuses[user]["wow_nickname"]} выключил(а) стрим!')
 
             # Update streaming status
             user_statuses[user]['status'] = is_streaming
@@ -191,9 +191,9 @@ async def on_ready():
 
 # Define the verb and noun arrays
 verbs = ['пососи', 'пидор', 'сперма', 'чмо', 'членасос', "выродок", "говно", "карлик"]
-verbs2 = ['чё надо?', 'иди помойся', 'тебе пёрнуть?', 'а я ебу?', 'ключ закрыть? да иди нахуй', "я заебался тут торчать,", "пошли в танки", "ты без меня в ключ пошел?"]
-nouns1 = ['анимешник', 'портки обосранные', 'пидар', 'ore', 'хуесос', 'Ле перфекто!', "еще пэнсел, пэнсил покричи", "милидэнсер хуев"]
-nouns2 = ['варикозник', 'жепанюх', 'el pidoraso', 'гном', 'пидорас', 'Ле перфекто!']
+verbs2 = ['чё надо?', 'иди помойся', 'ты пасть завежика там' , 'магу насрать лоток' 'тебе пёрнуть?', 'а я ебу?', 'ключ закрыть? да иди нахуй', "я заебался тут торчать,", "пошли в танки", "ты без меня в ключ пошел?"]
+nouns1 = ['анимешник', 'Типичное быдно', 'евнух', 'хусос', 'портки обосранные', 'пидар', 'ore', 'хуесос', 'Ле перфекто!', "еще пэнсел, пэнсил покричи", "милидэнсер хуев"]
+nouns2 = ['варикозник', 'жепанюх', 'Лё секс!', 'el pidoraso', 'гном', 'пидорас', 'Ле перфекто!', 'сперма хуй', 'умри в канаве с разработчиками']
 
 @client.event
 async def on_member_join(member):
@@ -247,6 +247,11 @@ async def on_message(message):
                 "милидэнс",
                 "пэнсел",
                 'ля',
+                'да ебло хули',
+                'такое чмо',
+                'Типичное быдно',
+                'сперма хуй',
+                'Лё секс!',
                 'жалование пришлите',
                 'Пидорасы',
                 'Гц?',
