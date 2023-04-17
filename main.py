@@ -12,7 +12,8 @@ discord.opus.load_opus('libopus.so.0')
 users = {
     'peksal1': 'Бродерман',
     'flocke456': 'Натика',
-    'causelovehurts' : 'Твояхозяйка'
+    'causelovehurts' : 'Твояхозяйка',
+    'aablf' : 'Гачистрф'
 }
 user_statuses = {user: {'status': False, 'wow_nickname': users.get(user, 'user')} for user in users}
 
@@ -33,15 +34,6 @@ url_regex = re.compile(r'^https?://(?:www\.)?youtube\.com/watch\?v=([A-Za-z0-9_-
 
 # List of YouTube video URLs to play
 video_urls = [
-    #'https://www.youtube.com/watch?v=jumQ76GEYLQ', #
-    #'https://www.youtube.com/watch?v=Cz5q05Hl5gs', #
-    #'https://www.youtube.com/watch?v=Uift1RYej0w', #
-    #'https://www.youtube.com/watch?v=qT_R_D3tCes', #
-   # 'https://www.youtube.com/watch?v=6IUqSY783_8', # собака писала
-   # 'https://www.youtube.com/watch?v=vkPXG11Fj_U', # шипупи
-    #'https://www.youtube.com/watch?v=G6pqAN8ALC8', # пасха
-    #'https://www.youtube.com/watch?v=azd1ZnHNt9g', # радужный гимн
-    #'https://www.youtube.com/watch?v=t4TnTqH6E8M', # Мальчик на девятке
     'https://www.youtube.com/watch?v=pUROT2f6azM', # drop
     'https://www.youtube.com/watch?v=heLj63wUIrk', # gender
     'https://www.youtube.com/watch?v=PpSTwj6Plc8', # gravy train 
