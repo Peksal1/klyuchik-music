@@ -10,9 +10,8 @@ import re
 # Load the Opus library for audio encoding/decoding
 discord.opus.load_opus('libopus.so.0')
 users = {
-    'peksal1': 'Бродерман',
-    'flocke456': 'Натика',
-    'causelovehurts' : 'Твояхозяйка',
+    'peksal1': 'Лератель',
+    'flocke456': 'Клиерма',
     'aablf' : 'Гачистрф'
 }
 user_statuses = {user: {'status': False, 'wow_nickname': users.get(user, 'user')} for user in users}
@@ -45,7 +44,6 @@ video_urls = [
     'https://www.youtube.com/watch?v=YZKESqe4MIU', # monkeys
     'https://www.youtube.com/watch?v=KR-eV7fHNbM', # calling
     'https://www.youtube.com/watch?v=I_2D8Eo15wE', # black betty
-    'https://www.youtube.com/watch?v=8sz2kxRxfzM', # мое сердце
     'https://www.youtube.com/watch?v=K6BRna4_bmg', # edamame
     'https://www.youtube.com/watch?v=MxJKqd8sPy0', # holding on
 ]
@@ -55,35 +53,6 @@ zapuskatory = [
     'макаем',
     'ЗАПУСКАЕМ\n░ГУСЯ░▄▀▀▀▄░РАБОТЯГИ░░\n▄███▀░◐░░░▌░░░░░░░\n░░░░▌░░░░░▐░░░░░░░\n░░░░▐░░░░░▐░░░░░░░\n░░░░▌░░░░░▐▄▄░░░░░\n░░░░▌░░░░▄▀▒▒▀▀▀▀▄\n░░░▐░░░░▐▒▒▒▒▒▒▒▒▀▀▄\n░░░▐░░░░▐▄▒▒▒▒▒▒▒▒▒▒▀▄\n░░░░▀▄░░░░▀▄▒▒▒▒▒▒▒▒▒▒▀▄\n░░░░░░▀▄▄▄▄▄█▄▄▄▄▄▄▄▄▄▄▄▀▄\n░░░░░░░░░░░▌▌▌▌░░░░░\n░░░░░░░░░░░▌▌░▌▌░░░░░\n░░░░░░░░░▄▄▌▌▄▌▌░░░░░'
 ]
-
-@client.command()
-async def add(ctx, url: str, name: str):
-    if 'youtube.com' not in url:
-        await ctx.send('Неверная ссылка. Только ссылки на YouTube разрешены.')
-    else:
-        video_urls.append((url, name))
-        await ctx.send(f'Добавил {name} ({url}) в плейлист.')
-
-@client.command()
-async def remove(ctx, name: str):
-    urls_to_remove = [u for u in video_urls if u[1] == name]
-    if len(urls_to_remove) == 0:
-        await ctx.send(f' {name} не найдено в плейлисте.')
-    elif len(urls_to_remove) == 1:
-        video_urls.remove(urls_to_remove[0])
-        await ctx.send(f'Убрал {name} из плейлиста.')
-    else:
-        urls_str = '\n'.join([u[0] for u in urls_to_remove])
-        await ctx.send(f'Пдейдись содержит несколько записей с названием {name}:\n{urls_str}\nПожалуйста, используйте имя трека, который вы хотите удалить.')
-
-@client.command()
-async def list(ctx):
-    if len(video_urls) == 0:
-        await ctx.send('Плейлист пуст.')
-    else:
-        urls_str = '\n'.join([f'{u[1]}: {u[0]}' for u in video_urls])
-        await ctx.send(f'Плейлист:\n{urls_str}')
-
 
 async def check_streaming_status(user):
     while True:
@@ -205,17 +174,13 @@ async def on_member_join(member):
 
 @client.event
 async def on_message(message):
-    await client.process_commands(message)
-    
-@client.event
-async def on_message(message):
     
     # Check that the message was not sent by the bot itself
     if message.author == client.user:
         return
 
     # 4%
-    if random.random() > 0.95:
+    if random.random() > 0.97:
         # Get the sender's nickname
         nickname = message.author.mention
         # Choose a random verb and noun
@@ -239,6 +204,7 @@ async def on_message(message):
                 "милидэнс",
                 "пэнсел",
                 'ля',
+                "извинись",
                 'да ебло хули',
                 'такое чмо',
                 'Типичное быдно',
