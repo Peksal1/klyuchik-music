@@ -1,224 +1,206 @@
-import asyncio
 import discord
-from pytube import YouTube
-from discord.ext import commands
+import asyncio
 import random
-import os
-import requests
-import re
+from discord.ext import commands
 
-# Load the Opus library for audio encoding/decoding
-discord.opus.load_opus('libopus.so.0')
-users = {
-    'peksal1': 'Лератель',
-    'flocke456': 'Клиерма',
-    'aablf' : 'Гачистрф'
-}
-user_statuses = {user: {'status': False, 'wow_nickname': users.get(user, 'user')} for user in users}
+# Discord bot setup
+intents = discord.Intents.default()
+client = commands.Bot(command_prefix='/', intents=intents)
 
-endpoint = 'https://klyuchik-v-durku-backend.herokuapp.com/is-streaming/'
 # Get the bot token from the environment variable
 bot_token = os.environ.get('DISCORD_BOT_TOKEN')
 if not bot_token:
     print('Error: no bot token specified in DISCORD_BOT_TOKEN environment variable')
     exit(1)
 
-# Initialize the Discord client
-intents = discord.Intents.all()
 
-intents.members = True
-client = commands.Bot(command_prefix='/', intents=intents)
-
-url_regex = re.compile(r'^https?://(?:www\.)?youtube\.com/watch\?v=([A-Za-z0-9_-]{11})$')
-
-# List of YouTube video URLs to play
-video_urls = [
-    'https://www.youtube.com/watch?v=pUROT2f6azM', # drop
-    'https://www.youtube.com/watch?v=heLj63wUIrk', # gender
-    'https://www.youtube.com/watch?v=PpSTwj6Plc8', # gravy train 
-    'https://www.youtube.com/watch?v=6bYEtcwDhU8', # mdma
-    'https://www.youtube.com/watch?v=e-ndA04nCao', # do it like a russian
-    'https://www.youtube.com/watch?v=XjrPJRwY3s0', # bassmark
-    'https://www.youtube.com/watch?v=QvyclAhWlAY', # shaman king
-    'https://www.youtube.com/watch?v=6Wvda9AkDnM', # zombie
-    'https://www.youtube.com/watch?v=YZKESqe4MIU', # monkeys
-    'https://www.youtube.com/watch?v=KR-eV7fHNbM', # calling
-    'https://www.youtube.com/watch?v=I_2D8Eo15wE', # black betty
-    'https://www.youtube.com/watch?v=K6BRna4_bmg', # edamame
-    'https://www.youtube.com/watch?v=MxJKqd8sPy0', # holding on
+# List of dungeons
+dungeons = [
+    'Рассвет Бесконечности: Падение Галакронда', 'Рассвет Бесконечности: Подъем Дорнозму',
+    'Усадьба Уэйкрестов', 'Атал\'Дазар', 'Чаща Темного Сердца',
+    'Крепость Черной Ладьи', 'Вечное цветение', 'Трон Приливов'
 ]
-
-zapuskatory = [
-    'запускаем жопохуя работяги\n░░░░░░░░░░░░▄▀▀▀▀▄░░░\n░░░░░░░░░░▄▀░░▄░▄░█░░\n░▄▄░░░░░▄▀░░░░▄▄▄▄█░░\n█░░▀▄░▄▀░░░░░░░░░░█░░\n░▀▄░░▀▄░░░░█░░░░░░█░░\n░░░▀▄░░▀░░░█░░░░░░█░░\n░░░▄▀░░░░░░█░░░░▄▀░░░\n░░░▀▄▀▄▄▀░░█▀░▄▀░░░░░\n░░░░░░░░█▀▀█▀▀░░░░░░░\n░░░░░░░░▀▀░▀▀░░░░░░░░',
-    'макаем',
-    'ЗАПУСКАЕМ\n░ГУСЯ░▄▀▀▀▄░РАБОТЯГИ░░\n▄███▀░◐░░░▌░░░░░░░\n░░░░▌░░░░░▐░░░░░░░\n░░░░▐░░░░░▐░░░░░░░\n░░░░▌░░░░░▐▄▄░░░░░\n░░░░▌░░░░▄▀▒▒▀▀▀▀▄\n░░░▐░░░░▐▒▒▒▒▒▒▒▒▀▀▄\n░░░▐░░░░▐▄▒▒▒▒▒▒▒▒▒▒▀▄\n░░░░▀▄░░░░▀▄▒▒▒▒▒▒▒▒▒▒▀▄\n░░░░░░▀▄▄▄▄▄█▄▄▄▄▄▄▄▄▄▄▄▀▄\n░░░░░░░░░░░▌▌▌▌░░░░░\n░░░░░░░░░░░▌▌░▌▌░░░░░\n░░░░░░░░░▄▄▌▌▄▌▌░░░░░'
+boss_numbers = ["на первом боссе", "на втором боссе", "на третьем боссе", "на последнем боссе"]
+consequences = [
+    "в итоге вся группа погибла", 
+    "это привело к серии ошибок", 
+    "в результате мы потеряли ключ", 
+    "и это значительно замедлило нас"
 ]
+# Function to generate a random story
+def generate_story():
+    actions = ['пообещал дать боп на первом боссе', 'забыл использовать щит', 'не увернулся от атаки',    "забыл использовать основной защитный кулдаун",
+    "использовал Божественное вмешательство на DPS вместо лечения",
+    "пропустил важный интерапт",
+    "промахнулся Молотом Гнева",
+    "активировал Авангард в самый неподходящий момент",
+    "пытался танковать босса лицом к группе",
+    "стоял в огне, забыв про уклонение",
+    "пытался использовать слабые ауры",
+    "проигнорировал крики о помощи от лекаря",
+    "забыл сменить таланты перед боссом",
+    "перепутал цель и танковал моба, а не босса",
+    "отвлекся на диалог в гильдейском чате",
+    "пытался поймать редкого пета посреди боя",
+    "пропустил вызов к дуэли от другого игрока",
+    "забыл про механику отражения урона боссом",
+    "случайно вышел из игры в середине боя",
+    "перепутал клавиши и использовал эмоцию вместо атаки",
+    "пытался соло танковать аддов без поддержки",
+    "забыл надеть правильную броню",
+    "использовал предметы для лечения вместо защиты",
+    "отправился в AFK в самый ответственный момент",
+    "забыл, как работает новый навык",
+    "случайно отключил важные аддоны",
+    "пытался обменяться предметами во время боя",
+    "игнорировал советы опытных игроков",
+    "использовал атакующие заклинания вместо оборонительных",
+    "пытался применить стратегию из устаревшего гайда",
+    "отвлекся на новости в чате",
+    "не заметил, что его здоровье критически низко",
+    "забыл про баффы перед боем",
+    "игнорировал индикаторы опасности",
+    "отвлекся на настройку интерфейса",
+    "пытался дать советы другим, забывая про свои обязанности",
+    "забыл о механике контроля толпы",
+    "пытался пройти через зону с высоким уровнем радиации",
+    "использовал неподходящее заклинание для баффа группы",
+    "забыл вовремя сменить оружие",
+    "игнорировал предупреждения о заминированных участках",
+    "пытался использовать устаревшие тактики",
+    "забыл про механику смены фаз у босса",
+    "отвлекся на разгадывание головоломки в инвентаре",
+    "пропустил сигнал к отступлению",
+    "не использовал способность к быстрому перемещению",
+    "забыл про механику специфического дебаффа",
+    "игнорировал сигналы к регрупировке",
+    "промахнулся по цели при использовании специальной атаки",
+    "не заметил активации ловушки",
+    "использовал неверные команды для коммуникации",
+    "забыл про важный элемент интерфейса",
+    "пытался использовать старые стратегии в новой обнове"]
+    reasons = ['ибо он все равно тебе не помог бы', 'но отвлекся на кошку', 'потому что забыл как это делается',     "потому что думал, что это усилит нашу атаку",
+    "но забыл, что он на кулдауне",
+    "чтобы показать свой новый маунт",
+    "поскольку был слишком занят разговорами в чате",
+    "не зная, что это самый худший выбор в этой ситуации",
+    "думая, что это стратегия против этого босса",
+    "игнорируя предупреждения от команды",
+    "под влиянием недопонимания механик",
+    "чтобы показать свои DPS-навыки, которых не было",
+    "потому что забыл, как играть после долгого перерыва",
+    "под давлением неожиданного вызова к дуэли",
+    "из-за прерывания соединения в критический момент",
+    "пытаясь выполнить случайное задание на фоне боя",
+    "подражая стратегии, увиденной в YouTube-видео",
+    "из-за неправильной настройки клавиш",
+    "пытаясь впечатлить новых игроков в группе",
+    "забыв о последствиях для остальной группы",
+    "из-за ошибки в понимании текущей меты",
+    "чтобы проверить новый билд, о котором читал на форуме",
+    "под влиянием слишком многих гайдов",
+    "забыв о важности поддержания агро",
+    "пытаясь избежать ответственности за поражение",
+    "из-за невнимательности к изменениям в патчноутах",
+    "подражая действиям другого танка в прошлом рейде",
+    "из-за стресса от предыдущих неудачных попыток",
+    "думая, что это добавит элемент неожиданности",
+    "игнорируя советы более опытных игроков",
+    "пытаясь сократить время боя",
+    "из-за недооценки сложности босса",
+    "пытаясь применить слишком сложные тактики",
+    "забыв о базовых принципах игры за свой класс",
+    "из-за перегрузки информацией от аддонов",
+    "пытаясь пройти на неверном уровне сложности",
+    "под влиянием неверной оценки ситуации",
+    "из-за неправильного понимания роли в группе",
+    "пытаясь привлечь внимание к своему персонажу",
+    "под давлением времени на выполнение ключа",
+    "из-за неправильного прочтения гайдов",
+    "пытаясь выполнить секретную задачу",
+    "думая, что команда справится без его помощи",
+    "из-за недостатка опыта в подобных боях",
+    "подражая действиям персонажей из книг по WoW",
+    "из-за путаницы в тактике группы",
+    "пытаясь исправить ошибку другого игрока",
+    "думая, что это повысит его рейтинг",
+    "пытаясь сделать бой более динамичным",
+    "из-за переоценки своих способностей",
+    "под впечатлением от прошлых успешных боев",
+    "из-за путаницы с интерфейсом игры",
+    "пытаясь адаптироваться к новым механикам игры"]
+    return f'Я {action} {boss_number}, {reason}, {consequence}.'
 
-async def check_streaming_status(user):
+# Task to send dungeon announcement and follow-up story
+async def dungeon_run_task():
     while True:
-        try:
-            response = requests.get(endpoint + user)
-            data = response.json()
-            is_streaming = data['isStreaming']
+        # Wait for a random time before announcing a dungeon
+        await asyncio.sleep(random.randint(2, 17) * 60 * 60)  # Random time in hours converted to seconds
 
-            # Check if streaming status has changed
-            if user in user_statuses and user_statuses[user]['status'] != is_streaming:
-                if is_streaming:
-                    print(f'{user_statuses[user]["wow_nickname"]} включил(а) стрим!')
-                    # Replace 712008433443799150 with your Discord channel ID
-                    channel = client.get_channel(1088848545261572116)
-                    await channel.send(f'{user_statuses[user]["wow_nickname"]} включил(а) стрим! Заходим на https://www.twitch.tv/{user}')
-                else:
-                    print(f'{user_statuses[user]["wow_nickname"]} выключил(а) стрим!')
-                    # Replace 712008433443799150 with your Discord channel ID
-                    channel = client.get_channel(1088848545261572116)
-                    await channel.send(f'{user_statuses[user]["wow_nickname"]} выключил(а) стрим!')
+        # Send dungeon announcement
+        dungeon = random.choice(dungeons)
+        keystone_level = random.randint(2, 17)
+        announcement = f'пошли в ключ? {dungeon} {keystone_level}'
+        channel = client.get_channel(712008433443799151)
+        await channel.send(announcement)
 
-            # Update streaming status
-            user_statuses[user]['status'] = is_streaming
+        # Wait for 1-3 hours before sending follow-up story
+        await asyncio.sleep(random.randint(1, 3) * 60 * 60)  # 1-3 hours in seconds
 
-            # Wait 5 minutes before checking again
-            await asyncio.sleep(300)
+        # Send follow-up story
+        story = generate_story()
+        await channel.send(story)
 
-        except Exception as e:
-            print(f'Error: {e}')
-            # Wait 30 seconds before trying again
-            await asyncio.sleep(30)
+def generate_welcome_message(member):
+    bad_bot_message = random.choice([
+    "Привет! Я здесь, чтобы напомнить, как плохо я играю. Надеюсь, ты покажешь себя лучше!",
+    "Добро пожаловать! Как новый член, ты должен знать, что мои навыки игры оставляют желать лучшего.",
+    "Я рад видеть новое лицо, потому что мои провалы в игре уже ни для кого не новость.",
+    "Всем известно, что я не лучший игрок. Но я верю, что ты сможешь показать класс!",
+    "Приветствую! Надеюсь, ты не будешь играть так же плохо, как я.",
+    "Моя репутация плохого игрока уже обросла легендами. Докажи, что ты не такой!",
+    "Я известен своей ужасной игрой. Но ты, наверное, лучше!",
+    "В гильдии много отличных игроков, но я, к сожалению, не из их числа.",
+    "Мои неудачи в игре уже стали притчей во языцех. Покажи, как нужно играть!",
+    "Добро пожаловать! Я здесь, чтобы напомнить, что даже самые плохие игроки, как я, найдут здесь своё место."
+    ])
 
+    mighty_guild_master_message = random.choice([
+       "Наш глава гильдии – настоящий мастер и лидер. От него можно многому научиться!",
+    "Если у тебя возникнут вопросы, обращайся к нашему великому главе гильдии. Он знает всё!",
+    "Наш глава – это пример истинного мастерства и мудрости. Он всегда поможет и подскажет!",
+    "Глава нашей гильдии обладает невероятными навыками и знаниями. Ты в хороших руках!",
+    "Помни, что наш глава гильдии – это легенда, и его советы бесценны.",
+    "Если тебе нужен пример для подражания, наш глава гильдии – идеальный выбор.",
+    "Наш глава гильдии всегда знает, как действовать в любой ситуации. Его опыт неоценим.",
+    "Обращайся к нашему главе гильдии за мудрыми советами – он настоящий лидер.",
+    "Глава гильдии – это наша гордость. Его лидерство и мастерство восхищают.",
+    "Нет лучшего наставника и лидера, чем наш глава гильдии. Его опыт поможет тебе стать лучше."
+    ])
 
-async def play_song(voice_client):
-    # Choose a random video URL from the list
-    url = random.choice(video_urls)
-
-    # Download the video as an audio stream
-    yt = YouTube(url)
-    stream = yt.streams.filter(only_audio=True).first()
-    if not stream:
-        print(f'Error: could not download audio stream from {url}')
-        return
-
-    # Save the audio stream to a temporary file
-    filename = f'{yt.video_id}.mp3'
-    stream.download(filename=filename)
-
-    # Send the audio stream to the voice channel
-    source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(filename))
-    voice_client.play(source, after=lambda e: print(f'Finished playing {filename}'))
-    print(f'Playing {filename}')
-
-    # Wait for the song to finish playing before deleting the temporary file
-    while voice_client.is_playing():
-        await asyncio.sleep(1)
-    os.remove(filename)
-
+    return (
+        f"{member.mention}, добро пожаловать в нашу гильдию!\n"
+        f"{bad_bot_message}\n"
+        f"{mighty_guild_master_message}\n"
+        "Не забудь написать свой игровой ник и настоящее имя в Дискорде. "
+        "Если у тебя есть вопросы, обращайся к нашему главе гильдии!"
+    )
 
 @client.event
 async def on_ready():
     print(f'{client.user} has connected to Discord!')
-    # Find the voice channel with the specified ID
-    voice_channel = client.get_channel(712008433443799151)
-    if not voice_channel:
-        print(f'Error: could not find voice channel with ID 712008433443799151')
-        exit(1)
-    print(f'Connecting to voice channel {voice_channel.name} ({voice_channel.id})')
-
-    # Connect to the voice channel
-    voice_client = await voice_channel.connect()
-    print(f'Connected to voice channel {voice_channel.name}')
-
-    # Start checking streaming status for each user in the array
-    for user in users:
-         asyncio.ensure_future(check_streaming_status(user))
-
-    # Start playing songs in a loop
-    while True:
-        try:
-            if voice_client and voice_client.is_connected():
-                await play_song(voice_client)
-            else:
-                print('Bot is not connected to a voice channel')
-                voice_client = None
-                await asyncio.sleep(5) # wait 5 seconds before trying to reconnect
-                voice_client = await voice_channel.connect()
-                print(f'Connected to voice channel {voice_channel.name}')
-        except Exception as e:
-            print(f'Error: {e}')
-            
-        # send a random message every 12-36 hours (randomly)
-        await asyncio.sleep(random.randint(12*60*60, 36*60*60))
-        message = random.choice(zapuskatory)
-        await client.get_channel(712008433443799150).send(message)
-
-
-# Define the verb and noun arrays
-verbs = ['пососи', 'пидор', 'сперма', 'чмо', 'членасос', "выродок", "говно", "карлик"]
-verbs2 = ['чё надо?', 'иди помойся', 'ты пасть завежика там' , 'магу насрать лоток' 'тебе пёрнуть?', 'а я ебу?', 'ключ закрыть? да иди нахуй', "я заебался тут торчать,", "пошли в танки", "ты без меня в ключ пошел?"]
-nouns1 = ['анимешник', 'Типичное быдно', 'евнух', 'хусос', 'портки обосранные', 'пидар', 'ore', 'хуесос', 'Ле перфекто!', "еще пэнсел, пэнсил покричи", "милидэнсер хуев"]
-nouns2 = ['варикозник', 'жепанюх', 'Лё секс!', 'el pidoraso', 'гном', 'пидорас', 'Ле перфекто!', 'сперма хуй', 'умри в канаве с разработчиками']
+    client.loop.create_task(dungeon_run_task())
 
 @client.event
 async def on_member_join(member):
-    # Get the channel where you want to send the greeting
-    channel = client.get_channel(712008433443799150)
-    # Choose a random verb and noun
-    verb = random.choice(verbs)
-    verb2 = random.choice(verbs2)
-    noun1 = random.choice(nouns1)
-    noun2 = random.choice(nouns2) if random.random() < 0.2 else ''
-    # Construct the greeting message
-    greeting = f"{member.mention} {verb}, добро пожаловать в ключик в дурку! {verb2} {noun1}"
-    if noun2:
-        greeting += f", {noun2}"
-    # Send the greeting message
-    await channel.send(greeting)
+    # Generate the welcome message
+    welcome_message = generate_welcome_message(member)
 
-@client.event
-async def on_message(message):
-    
-    # Check that the message was not sent by the bot itself
-    if message.author == client.user:
-        return
+    # Specify the channel where you want to send the welcome message
+    # Replace 'YOUR_WELCOME_CHANNEL_ID' with the actual channel ID
+    channel = client.get_channel(712008433443799151)
 
-    # 4%
-    if random.random() > 0.97:
-        # Get the sender's nickname
-        nickname = message.author.mention
-        # Choose a random verb and noun
-        verb = random.choice(verbs)
-        verb2 = random.choice(verbs2)
-        noun1 = random.choice(nouns1)
-        noun2 = random.choice(nouns2) if random.random() < 0.2 else ''
-        # Construct the reply message
-        reply = f"{nickname} {verb}, {verb2} {noun1}"
-        if noun2:
-            reply += f", {noun2}"
-        # Send the reply message
-        await message.channel.send(reply)
-    elif random.random() < 0.05:
-        # Randomly reply with a phrase 4% of the time
-            phrases = [
-                'Авг 1200 рио чел',
-                'невижу на почте 100000голд',
-                'как говарил один пьяный призедент',
-                'да мне насрать кто где летает',
-                "милидэнс",
-                "пэнсел",
-                'ля',
-                "извинись",
-                'да ебло хули',
-                'такое чмо',
-                'Типичное быдно',
-                'сперма хуй',
-                'Лё секс!',
-                'жалование пришлите',
-                'Пидорасы',
-                'Гц?',
-                'красава, бро',
-                'пхахахах',
-                'Пошла ебка',
-                'Ле перфекто!'
-            ]
-            reply = random.choice(phrases)
-            await message.channel.send(reply)        
+    # Send the welcome message
+    await channel.send(welcome_message)
 
 client.run(bot_token)
