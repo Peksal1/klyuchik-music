@@ -136,8 +136,7 @@ def generate_story():
 # Task to send dungeon announcement and follow-up story
 async def dungeon_run_task():
     while True:
-        # Wait for a random time before announcing a dungeon
-        await asyncio.sleep(random.randint(2, 17) * 60 * 60)  # Random time in hours converted to seconds
+
 
         # Send dungeon announcement
         dungeon = random.choice(dungeons)
@@ -152,6 +151,8 @@ async def dungeon_run_task():
         # Send follow-up story
         story = generate_story()
         await channel.send(story)
+                # Wait for a random time before announcing a dungeon
+        await asyncio.sleep(random.randint(2, 17) * 60 * 60)  # Random time in hours converted to seconds
 
 def generate_welcome_message(member):
     bad_bot_message = random.choice([
