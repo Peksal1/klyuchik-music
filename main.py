@@ -6,6 +6,7 @@ from discord.ext import commands
 
 # Discord bot setup
 intents = discord.Intents.default()
+intents.members = True  
 client = commands.Bot(command_prefix='/', intents=intents)
 
 # Get the bot token from the environment variable
@@ -188,20 +189,22 @@ def generate_welcome_message(member):
     )
 
 @client.event
-async def on_ready():
-    print(f'{client.user} has connected to Discord!')
-    client.loop.create_task(dungeon_run_task())
-
-@client.event
 async def on_member_join(member):
     # Generate the welcome message
     welcome_message = generate_welcome_message(member)
 
     # Specify the channel where you want to send the welcome message
-    # Replace 'YOUR_WELCOME_CHANNEL_ID' with the actual channel ID
+    # Ensure this is the correct channel ID and the bot has access to it
     channel = client.get_channel(712008433443799151)
+    if channel:
+        await channel.send(welcome_message)
+    else:
+        print(f"Could not find the channel with ID 712008433443799151")
 
-    # Send the welcome message
-    await channel.send(welcome_message)
+@client.event
+async def on_ready():
+    print(f'{client.user} has connected to Discord!')
+    client.loop.create_task(dungeon_run_task())
+
 
 client.run(bot_token)
