@@ -143,7 +143,7 @@ async def dungeon_run_task():
         dungeon = random.choice(dungeons)
         keystone_level = random.randint(2, 17)
         announcement = f'пошли в ключ? {dungeon} {keystone_level}'
-        channel = client.get_channel(712008433443799151)
+        channel = client.get_channel(712008433443799150)
         await channel.send(announcement)
 
         # Wait for 1-3 hours before sending follow-up story
@@ -195,11 +195,11 @@ async def on_member_join(member):
 
     # Specify the channel where you want to send the welcome message
     # Ensure this is the correct channel ID and the bot has access to it
-    channel = client.get_channel(712008433443799151)
+    channel = client.get_channel(712008433443799150)
     if channel:
         await channel.send(welcome_message)
     else:
-        print(f"Could not find the channel with ID 712008433443799151")
+        print(f"Could not find the channel with ID 712008433443799150")
 
 @client.event
 async def on_ready():
