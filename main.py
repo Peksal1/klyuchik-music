@@ -22,12 +22,14 @@ dungeons = [
     'Усадьба Уэйкрестов', 'Атал\'Дазар', 'Чаща Темного Сердца',
     'Крепость Черной Ладьи', 'Вечное цветение', 'Трон Приливов'
 ]
-boss_numbers = ["на первом боссе", "на втором боссе", "на третьем боссе", "на последнем боссе"]
+boss_numbers = ["на первом боссе", "на первом паке под БЛ", "там в паке, где большой моб", "в паке перед ластом" "на втором боссе", "на третьем боссе", "на последнем боссе"]
+player_specs = ["хил друид", "мутик, который друг гачиста", "ферал", "ретрик", "тт монк", "вв монк", "сурв", "БМ", "фури", "демолок", "шп", "аркан", "прот вар", "сова"]
 consequences = [
     "в итоге вся группа погибла", 
     "это привело к серии ошибок", 
+    "ну что это за нахуй, ну что за пиздец?",
     "в результате мы потеряли ключ", 
-    "и это значительно замедлило нас"
+    "и это значительно замедлило нас", "в итоге я пойду в нолик, надо это все проверить"
 ]
 # Function to generate a random story
 def generate_story():
@@ -131,7 +133,8 @@ def generate_story():
     "под впечатлением от прошлых успешных боев",
     "из-за путаницы с интерфейсом игры",
     "пытаясь адаптироваться к новым механикам игры"]
-    return f'Я {action} {boss_number}, {reason}, {consequence}.'
+    return f'Это пиздец. В ключе сейчас - Я {random.choice(actions)} {random.choice(boss_numbers)}, {random.choice(reasons)}, еще и {random.choice(player_specs)} {random.choice(actions)} {random.choice(boss_numbers)}, {random.choice(reasons)}, а потом еще и {random.choice(player_specs)} {random.choice(actions)} {random.choice(boss_numbers)}, {random.choice(reasons)}, а, ну и конечно был {random.choice(player_specs)} {random.choice(actions)} {random.choice(boss_numbers)}, {random.choice(reasons)} {random.choice(consequences)}. Пати конечно тоже странное было правда'
+  
 
 # Task to send dungeon announcement and follow-up story
 async def dungeon_run_task():
@@ -141,13 +144,13 @@ async def dungeon_run_task():
         # Send dungeon announcement
         dungeon = random.choice(dungeons)
         keystone_level = random.randint(2, 17)
-        announcement = f'пошли в ключ? {dungeon} {keystone_level}'
+        player_count = random.randint(1, 3)
+        announcement = f'пошли в ключ? {dungeon} {keystone_level}, нужны {player_count} дд и {player_count} хил'
         channel = client.get_channel(712008433443799150)
         await channel.send(announcement)
 
         # Wait for 1-3 hours before sending follow-up story
-        await asyncio.sleep(random.randint(1, 3) * 60 * 60)  # 1-3 hours in seconds
-
+        await asyncio.sleep(random.randint(1, 3) * 60)  # 1-3 hours
         # Send follow-up story
         story = generate_story()
         await channel.send(story)
